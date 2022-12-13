@@ -1,11 +1,14 @@
 import { AssetInfo } from "../types/asset-info.interface";
 import { buildFetchUrlFromUrl, fromCidToIpfsTemplate } from "../_utils/fetch-path.utils";
-import { encode, HashName } from "multihashes";
 import { decodeAddress } from "algosdk";
-import { multicodecEnum } from "./types/multicodec.types";
-import { multihashEnum } from "./types/multihash.types";
+import { MulticodecEnum } from "./types/multicodec.types";
+import { MultihashEnum } from "./types/multihash.types";
 import { ArcMetadata } from "../types/json.scheme";
-const CID = require("cids");
+import { AssetUrl } from "./types/asset-url.interface";
+import { Base } from "../types/cid-tool.interface";
+import { encode, HashName } from "multihashes";
+const CIDTool = require('cid-tool')
+const CID = require('cids')
 
 export abstract class Arc19 {
     static checkIfValidArc(info: AssetInfo): boolean {
@@ -16,7 +19,8 @@ export abstract class Arc19 {
     }
     static async getMetadata(info: AssetInfo): Promise<ArcMetadata> {
         try {
-            const cid = this.getMetadataCID(info);
+            const cid = await this.getMetadataCID(info);
+            await this.getMetadataCID(info);
             const fetchUrl = buildFetchUrlFromUrl(
                 fromCidToIpfsTemplate(cid)
             );
@@ -26,22 +30,46 @@ export abstract class Arc19 {
             throw new Error("Arc 19 not configured correctly. Asset url is invalid. " + error);
         }
     }
-    static getMetadataCID(info: AssetInfo): string {
+    static async getMetadataCID(info: AssetInfo): Promise<any> {
         const idxStart = info.params.url.indexOf("{")
         const idxFinish = info.params.url.indexOf("}")
-        const obj = info.params.url.substring(idxStart + 1, idxFinish);
-        const [templateType, version, multiCodec, fieldName, hashType ] = obj.split(":");
-        const addrBytes = decodeAddress(info.params[fieldName]).publicKey
-        const hash = encode(addrBytes, hashType as HashName)
-        let cidResult;
-        if (version == '0') {
-            if (multiCodec != multicodecEnum.dagPb || hashType != multihashEnum.SHA2_256) {
-                throw new Error("Invalid version ~> 0");
-            }
-            cidResult = new CID(0, multiCodec , hash)
-        } else {
-            cidResult = new CID(1, multiCodec, hash);
+        const urlSubstr = info.params.url.substring(idxStart + 1, idxFinish);
+
+        const {
+            fieldName,
+            hashType,
+            version,
+            multiCodec,
+        } = this.resolveAssetUrl(urlSubstr);
+
+        // TODO: Refactor
+        const hash = (CIDTool.hashes() as Base[]).find(item => item.name == hashType)
+        const codec = (CIDTool.codecs() as Base[]).find(item => item.name == hashType)
+        if (!hash || !codec){
+            throw new Error("Codec or hash not valid. Please create a valid asset url.");
         }
-        return cidResult.toString();
+
+        if (version == 0) {
+            if (
+                multiCodec != 'dag-pb' ||
+                hashType != "sha2-256"
+            ) {
+                throw new Error("Invalid version ~> 0 for specified CID codec or hash");
+            }
+        }
+        const multiHashDigestBytes = decodeAddress(info.params[fieldName]).publicKey;
+        const encodedDigest = encode(multiHashDigestBytes, hash.name as HashName)
+        const cid = new CID(version, multiCodec, encodedDigest)
+        return cid.toString();
+    }
+    static resolveAssetUrl(assetUrl: string): AssetUrl {
+        const [templateType, version, multiCodec, fieldName, hashType] = assetUrl.split(":");
+        return {
+            templateType,
+            version: parseInt(version) as 0 | 1,
+            multiCodec: MulticodecEnum[multiCodec],
+            fieldName,
+            hashType: MultihashEnum[hashType],
+        };
     }
 }

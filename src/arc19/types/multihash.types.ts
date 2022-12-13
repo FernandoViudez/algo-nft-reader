@@ -1,3 +1,4 @@
-export enum multihashEnum {
-    SHA2_256 = 'sha2-256',
+export enum MultihashEnum {
+    'sha2-256' = 'sha2-256',
+    'sha2-512' = 'sha2-512',
 }
