@@ -1,9 +1,10 @@
-import { MulticodecEnum } from './multicodec.types';
-import { MultihashEnum } from './multihash.types';
+import { CodecName } from "cids";
+import { HashName } from "multihashes";
+
 export interface AssetUrl {
     templateType: string;
     version: 0 | 1;
-    multiCodec: MulticodecEnum; 
+    multiCodec: CodecName; 
     fieldName: string; 
-    hashType: MultihashEnum;
+    hashType: HashName;
 }

@@ -1,14 +1,12 @@
 import { AssetInfo } from "../types/asset-info.interface";
 import { buildFetchUrlFromUrl, fromCidToIpfsTemplate } from "../_utils/fetch-path.utils";
 import { decodeAddress } from "algosdk";
-import { MulticodecEnum } from "./types/multicodec.types";
-import { MultihashEnum } from "./types/multihash.types";
 import { ArcMetadata } from "../types/json.scheme";
 import { AssetUrl } from "./types/asset-url.interface";
-import { Base } from "../types/cid-tool.interface";
-import { encode, HashName } from "multihashes";
-const CIDTool = require('cid-tool')
-const CID = require('cids')
+import { decode, encode, HashName } from "multihashes";
+import { CodecName } from "cids";
+import { getCodecCodeFromName, getHashCodeFromName } from "../_utils/multiformats.utils";
+import { CID } from 'multiformats/cid';
 
 export abstract class Arc19 {
     static checkIfValidArc(info: AssetInfo): boolean {
@@ -42,10 +40,8 @@ export abstract class Arc19 {
             multiCodec,
         } = this.resolveAssetUrl(urlSubstr);
 
-        // TODO: Refactor
-        const hash = (CIDTool.hashes() as Base[]).find(item => item.name == hashType)
-        const codec = (CIDTool.codecs() as Base[]).find(item => item.name == hashType)
-        if (!hash || !codec){
+        
+        if (!getHashCodeFromName(hashType) || !getCodecCodeFromName(multiCodec)){
             throw new Error("Codec or hash not valid. Please create a valid asset url.");
         }
 
@@ -57,9 +53,16 @@ export abstract class Arc19 {
                 throw new Error("Invalid version ~> 0 for specified CID codec or hash");
             }
         }
+
         const multiHashDigestBytes = decodeAddress(info.params[fieldName]).publicKey;
-        const encodedDigest = encode(multiHashDigestBytes, hash.name as HashName)
-        const cid = new CID(version, multiCodec, encodedDigest)
+        const multiHashBytes = encode(multiHashDigestBytes, hashType)
+        const hash = decode(multiHashBytes);
+        const cid = CID.create(version, getCodecCodeFromName(multiCodec).code, {
+            bytes: multiHashBytes,
+            code: hash.code,
+            size: hash.length,
+            digest: multiHashDigestBytes,
+        })
         return cid.toString();
     }
     static resolveAssetUrl(assetUrl: string): AssetUrl {
@@ -67,9 +70,9 @@ export abstract class Arc19 {
         return {
             templateType,
             version: parseInt(version) as 0 | 1,
-            multiCodec: MulticodecEnum[multiCodec],
+            multiCodec: multiCodec as CodecName,
             fieldName,
-            hashType: MultihashEnum[hashType],
+            hashType: hashType as HashName,
         };
     }
 }
