@@ -29,5 +29,10 @@ export class Arc {
         await asset.resolveAsset();
         return await asset.getMetadata();
     }
+    async validateIntegrity(asaId: number) {
+        const asset = new Asset(asaId, this.indexerClient);
+        await asset.resolveAsset();
+        return await asset.validateIntegrity();
+    }
 }
 export { ArcMetadata, Arc69Metadata };

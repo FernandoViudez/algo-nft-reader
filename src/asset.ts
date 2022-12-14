@@ -68,4 +68,21 @@ export class Asset {
             }
         }
     }
+
+    async validateIntegrity() {
+        switch (this.arc) {
+            case ArcEnum.arc3: {
+                Arc3.validateIntegrity()
+            }
+            case ArcEnum.arc69: {
+                return await Arc69.getMetadata(this.info, this.indexerService);
+            }
+            case ArcEnum.arc19: {
+                return true;
+            }
+            default: {
+                throw new Error(`Asset with id ${this.id} has not a valid standard (arc)`);
+            }
+        }
+    }
 }
