@@ -39,3 +39,16 @@ export class Arc {
 }
 
 export { ArcMetadata, Arc69Metadata };
+
+new Arc({
+  token: {
+    "X-API-Key": "if9ITfbz7f2OqCqsH1nB7mnYD29kP3m6UFMoPsm8",
+  },
+  // host: "https://testnet-algorand.api.purestake.io/idx2",
+  host: "https://mainnet-algorand.api.purestake.io/idx2",
+  port: "",
+  // }).getAssetDigitalMedia(976342693);
+})
+  // .getAssetDigitalMedia(976298396)
+  .getAssetDigitalMedia(976426038)
+  .then((response) => console.log(response));
