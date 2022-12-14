@@ -42,8 +42,7 @@ export abstract class Arc69 {
     indexer: Indexer
   ): Promise<string[]> {
     try {
-      const { external_url, media_url, ...asset } =
-        await this.getMetadata(info, indexer);
+      const { media_url } = await this.getMetadata(info, indexer);
       const media = [];
       info.params.url?.startsWith("ipfs://") &&
         media.push(info.params.url.split("/").pop());
