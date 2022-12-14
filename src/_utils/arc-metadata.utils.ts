@@ -7,7 +7,6 @@ export function retrieveArcMediaForCompatibleArcs({
   animation_url,
 }: ArcMetadata): string[] {
   const media = [image];
-  external_url?.length && media.push(external_url);
   animation_url?.length && media.push(animation_url);
   return media;
 }

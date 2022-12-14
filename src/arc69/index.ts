@@ -48,7 +48,6 @@ export abstract class Arc69 {
       info.params.url?.startsWith("ipfs://") &&
         media.push(info.params.url.split("/").pop());
       media_url && media.push(media_url);
-      external_url && media.push(external_url);
       return media;
     } catch (error) {
       throw new Error(`Arc 69 ${Errors.arcBadConfigured} ` + error);
