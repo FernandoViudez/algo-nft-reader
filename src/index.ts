@@ -1,15 +1,15 @@
-import { IndexerCredentials } from "./types/indexer.interface"
-import { Indexer } from 'algosdk';
-import { Asset } from "./asset";
-import { checkIpfsGatewayPath } from "./_utils/ipfs.utils";
-import { constants } from "./constants";
-import { ArcMetadata } from "./types/json.scheme";
+import { Indexer } from "algosdk";
 import { Arc69Metadata } from "./arc69/types/json.scheme";
-
+import { Asset } from "./asset";
+import { constants } from "./constants";
+import { IndexerCredentials } from "./types/indexer.interface";
+import { ArcMetadata } from "./types/json.scheme";
+import { checkIpfsGatewayPath } from "./_utils/ipfs.utils";
 
 export class Arc {
     private indexerClient: Indexer;
     static ipfsGateway: string = constants.defaultIpfsGateway;
+
     constructor(
         private readonly indexerCredentials: IndexerCredentials,
         private readonly ipfsGateway?: string
@@ -24,15 +24,24 @@ export class Arc {
             indexerCredentials.port
         );
     }
+
     async getAssetMetadata(asaId: number) {
         const asset = new Asset(asaId, this.indexerClient);
         await asset.resolveAsset();
         return await asset.getMetadata();
     }
+
+    async getAssetDigitalMedia(asaId: number) {
+        const asset = new Asset(asaId, this.indexerClient);
+        await asset.resolveAsset();
+        return await asset.getDigitalMedia();
+    }
+
     async validateIntegrity(asaId: number) {
         const asset = new Asset(asaId, this.indexerClient);
         await asset.resolveAsset();
         return await asset.validateIntegrity();
     }
 }
+
 export { ArcMetadata, Arc69Metadata };
