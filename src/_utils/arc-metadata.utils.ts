@@ -8,8 +8,11 @@ export function createASADigitalMediaListHandler(
   metadata: ArcMetadata | Arc69Metadata
 ): ASADigitalMedia[] {
   const mediaList: ASADigitalMedia[] = [];
-  if ("image" in metadata)
-    _createASADigitalMediaListForCompatibleArcs(mediaList, metadata);
+  if ((metadata as ArcMetadata)?.image?.length)
+    _createASADigitalMediaListForCompatibleArcs(
+      mediaList,
+      <ArcMetadata>metadata
+    );
   else
     _createASADigitalMediaListForArc69(
       mediaList,
@@ -58,5 +61,10 @@ function _createASADigitalMediaListForArc69(
     media.push({
       media: info.params.url,
       integrity: info.params["metadata-hash"] || "",
+    });
+
+  metadata.media_url &&
+    media.push({
+      media: metadata.media_url,
     });
 }
