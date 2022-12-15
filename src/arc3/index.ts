@@ -34,7 +34,6 @@ export abstract class Arc3 {
     info: AssetInfo
   ): Promise<ASADigitalMedia[]> {
     try {
-      console.log("arc3");
       return createASADigitalMediaListHandler(
         info,
         await this.getMetadata(info)

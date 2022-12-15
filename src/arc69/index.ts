@@ -53,7 +53,6 @@ export abstract class Arc69 {
     indexer: Indexer
   ): Promise<ASADigitalMedia[]> {
     try {
-      console.log("arc69");
       return createASADigitalMediaListHandler(
         info,
         await this.getMetadata(info, indexer)

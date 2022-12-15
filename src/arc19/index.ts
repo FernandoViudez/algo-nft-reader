@@ -60,7 +60,6 @@ export abstract class Arc19 {
     info: AssetInfo
   ): Promise<ASADigitalMedia[]> {
     try {
-      console.log("arc19");
       return createASADigitalMediaListHandler(
         info,
         await this.getMetadata(info)
