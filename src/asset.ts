@@ -32,7 +32,7 @@ export class Asset {
 
     async resolveAsset() {
         await this.getAssetInfo();
-        this.setStandard();
+        await this.setStandard();
     }
 
     private async getAssetInfo() {
@@ -44,17 +44,19 @@ export class Asset {
         return response["asset"] as AssetInfo;
     }
 
-    private setStandard(): void {
+    private async setStandard() {
         if (Arc19.checkIfValidArc(this.info)) {
             this.arc = ArcEnum.arc19;
-        } else if (Arc3.checkIfValidArc(this.info)) {
-            this.arc = ArcEnum.arc3;
         } else if (
-            Arc69.checkIfValidArc(this.info, this.indexerService)
+            await Arc69.checkIfValidArc(this.info, this.indexerService)
         ) {
             this.arc = ArcEnum.arc69;
+        } else if (
+            await Arc3.checkIfValidArc(this.info)
+        ) {
+            this.arc = ArcEnum.arc3;
         } else {
-            this.arc = ArcEnum.invalidArc;
+            this.arc = ArcEnum.custom;
         }
     }
 
@@ -95,9 +97,7 @@ export class Asset {
                 );
             }
             default: {
-                throw new Error(
-                    `Asset with id ${this.id} has not a valid standard (arc)`
-                );
+                return [this.info.params.url];
             }
         }
     }

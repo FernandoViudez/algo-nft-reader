@@ -1,4 +1,3 @@
-import { HashName } from "multihashes";
 import { Base } from "../types/cid-tool.interface"
 const CIDTool = require('cid-tool')
 

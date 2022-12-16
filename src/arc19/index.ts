@@ -68,6 +68,9 @@ export abstract class Arc19 {
   }
 
   static resolveAssetUrl(assetUrl: string): AssetUrl {
+    const start = assetUrl.indexOf("{");
+    const finish = assetUrl.indexOf("}");
+    assetUrl = assetUrl.substring(start + 1, finish);
     const [templateType, version, multiCodec, fieldName, hashType] = assetUrl.split(":");
     return {
       templateType,

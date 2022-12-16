@@ -25,21 +25,29 @@ export class Arc {
         );
     }
 
-    async getAssetMetadata(asaId: number) {
+    private async initializeAsset(asaId: number): Promise<Asset> {
         const asset = new Asset(asaId, this.indexerClient);
         await asset.resolveAsset();
+        return asset;
+    }
+
+    async getStandard(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
+        return asset.standard;
+    }
+
+    async getAssetMetadata(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
         return await asset.getMetadata();
     }
 
     async getAssetDigitalMedia(asaId: number) {
-        const asset = new Asset(asaId, this.indexerClient);
-        await asset.resolveAsset();
+        const asset = await this.initializeAsset(asaId);
         return await asset.getDigitalMedia();
     }
 
     async validateIntegrity(asaId: number) {
-        const asset = new Asset(asaId, this.indexerClient);
-        await asset.resolveAsset();
+        const asset = await this.initializeAsset(asaId);
         return await asset.validateIntegrity();
     }
 }

@@ -15,13 +15,19 @@ export abstract class Arc69 {
   static async getLastCfgTxnNoteParsed(
     asaId: number,
     indexer: Indexer
-  ) {
+  ): Promise<Arc69Metadata> {
     const response = (await indexer
       .lookupAssetTransactions(asaId)
       .txType("acfg")
       .do()) as any[];
     const lastTxn = response["transactions"].pop();
-    return JSON.parse(Buffer.from(lastTxn.note, "base64").toString());
+    if (!lastTxn || !lastTxn.note) {
+      return {
+        standard: ArcEnum.custom,
+      };
+    } else {
+      return JSON.parse(Buffer.from(lastTxn.note, "base64").toString());
+    }
   }
   static async getMetadata(
     info: AssetInfo,
