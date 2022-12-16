@@ -3,9 +3,10 @@ import axios from "axios";
 import { CodecName } from "cids";
 import { decode, encode, HashName } from "multihashes";
 import { Errors } from "../enum/errors.enum";
+import { ASADigitalMedia } from "../types/asa-digital-media.interface";
 import { AssetInfo } from "../types/asset-info.interface";
 import { ArcMetadata } from "../types/json.scheme";
-import { retrieveArcMediaForCompatibleArcs } from "../_utils/arc-metadata.utils";
+import { createASADigitalMediaListHandler } from "../_utils/arc-metadata.utils";
 import {
   buildFetchUrlFromUrl,
   fromCidToIpfsTemplate,
@@ -81,9 +82,12 @@ export abstract class Arc19 {
     };
   }
 
-  static async getDigitalMedia(info: AssetInfo): Promise<string[]> {
+  static async getDigitalMedia(
+    info: AssetInfo
+  ): Promise<ASADigitalMedia[]> {
     try {
-      return retrieveArcMediaForCompatibleArcs(
+      return createASADigitalMediaListHandler(
+        info,
         await this.getMetadata(info)
       );
     } catch (error) {

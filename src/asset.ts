@@ -4,6 +4,7 @@ import { Arc3 } from "./arc3";
 import { Arc69 } from "./arc69";
 import { Arc69Metadata } from "./arc69/types/json.scheme";
 import { ArcEnum } from "./enum/arc.enum";
+import { ASADigitalMedia } from "./types/asa-digital-media.interface";
 import { AssetInfo } from "./types/asset-info.interface";
 import { ArcMetadata } from "./types/json.scheme";
 import { formatMediaIntegrity } from "./_utils/digital-media.utils";
@@ -82,7 +83,7 @@ export class Asset {
         }
     }
 
-    async getDigitalMedia(): Promise<string[]> {
+    async getDigitalMedia(): Promise<ASADigitalMedia[]> {
         switch (this.arc) {
             case ArcEnum.arc3: {
                 return await Arc3.getDigitalMedia(this.info);
@@ -97,14 +98,16 @@ export class Asset {
                 );
             }
             default: {
-                return [this.info.params.url];
+                return [{
+                    media: this.info.params.url,
+                    integrity: this.info.params.url.startsWith("ipfs://") ? undefined : this.info.params["metadata-hash"],
+                }];
             }
         }
     }
 
     async validateIntegrity() {
-        // TODO: Add type for digital media
-        let digitalMedia: any[] = await this.getDigitalMedia();
+        let digitalMedia = await this.getDigitalMedia();
         digitalMedia = formatMediaIntegrity(digitalMedia);
         let validIntegrity = true;
         let i = 0;

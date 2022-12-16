@@ -1,9 +1,10 @@
 import axios from "axios";
 import { ArcEnum } from "../enum/arc.enum";
 import { Errors } from "../enum/errors.enum";
+import { ASADigitalMedia } from "../types/asa-digital-media.interface";
 import { AssetInfo } from "../types/asset-info.interface";
 import { ArcMetadata } from "../types/json.scheme";
-import { retrieveArcMediaForCompatibleArcs } from "../_utils/arc-metadata.utils";
+import { createASADigitalMediaListHandler } from "../_utils/arc-metadata.utils";
 import { buildFetchUrlFromUrl } from "../_utils/fetch-path.utils";
 
 export abstract class Arc3 {
@@ -28,9 +29,12 @@ export abstract class Arc3 {
     }
   }
 
-  static async getDigitalMedia(info: AssetInfo): Promise<string[]> {
+  static async getDigitalMedia(
+    info: AssetInfo
+  ): Promise<ASADigitalMedia[]> {
     try {
-      return retrieveArcMediaForCompatibleArcs(
+      return createASADigitalMediaListHandler(
+        info,
         await this.getMetadata(info)
       );
     } catch (error) {
