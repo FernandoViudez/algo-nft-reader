@@ -78,7 +78,7 @@ export class Asset {
     }
   }
 
-  async getDigitalMedia(): Promise<string[]> {
+  async getDigitalMedia(): Promise<any[]> {
     switch (this.arc) {
       case ArcEnum.arc3: {
         return await Arc3.getDigitalMedia(this.info);
