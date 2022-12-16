@@ -1,6 +1,7 @@
 import { decodeAddress } from "algosdk";
 import axios from "axios";
-import { encode, HashName } from "multihashes";
+import { CodecName } from "cids";
+import { decode, encode, HashName } from "multihashes";
 import { Errors } from "../enum/errors.enum";
 import { ASADigitalMedia } from "../types/asa-digital-media.interface";
 import { AssetInfo } from "../types/asset-info.interface";
@@ -10,9 +11,9 @@ import {
   buildFetchUrlFromUrl,
   fromCidToIpfsTemplate,
 } from "../_utils/fetch-path.utils";
-import { multicodecEnum } from "./types/multicodec.types";
-import { multihashEnum } from "./types/multihash.types";
-const CID = require("cids");
+import { getCodecCodeFromName, getHashCodeFromName } from "../_utils/multiformats.utils";
+import { AssetUrl } from "./types/asset-url.interface";
+import { CID } from "multiformats/cid";
 
 export abstract class Arc19 {
   static checkIfValidArc(info: AssetInfo): boolean {
@@ -34,26 +35,51 @@ export abstract class Arc19 {
   }
 
   static getMetadataCID(info: AssetInfo): string {
-    const idxStart = info.params.url.indexOf("{");
-    const idxFinish = info.params.url.indexOf("}");
-    const obj = info.params.url.substring(idxStart + 1, idxFinish);
-    const [templateType, version, multiCodec, fieldName, hashType] =
-      obj.split(":");
-    const addrBytes = decodeAddress(info.params[fieldName]).publicKey;
-    const hash = encode(addrBytes, hashType as HashName);
-    let cidResult;
-    if (version == "0") {
-      if (
-        multiCodec != multicodecEnum.dagPb ||
-        hashType != multihashEnum.SHA2_256
-      ) {
-        throw new Error(Errors.invalidVersion);
-      }
-      cidResult = new CID(0, multiCodec, hash);
-    } else {
-      cidResult = new CID(1, multiCodec, hash);
+    const {
+      fieldName,
+      hashType,
+      version,
+      multiCodec,
+    } = this.resolveAssetUrl(info.params.url);
+
+
+    if (!getHashCodeFromName(hashType) || !getCodecCodeFromName(multiCodec)) {
+      throw new Error("Codec or hash not valid. Please create a valid asset url.");
     }
-    return cidResult.toString();
+
+    if (version == 0) {
+      if (
+        multiCodec != 'dag-pb' ||
+        hashType != "sha2-256"
+      ) {
+        throw new Error("Invalid version ~> 0 for specified CID codec or hash");
+      }
+    }
+
+    const multiHashDigestBytes = decodeAddress(info.params[fieldName]).publicKey;
+    const multiHashBytes = encode(multiHashDigestBytes, hashType)
+    const hash = decode(multiHashBytes);
+    const cid = CID.create(version, getCodecCodeFromName(multiCodec).code, {
+      bytes: multiHashBytes,
+      code: hash.code,
+      size: hash.length,
+      digest: multiHashDigestBytes,
+    })
+    return cid.toString();
+  }
+
+  static resolveAssetUrl(assetUrl: string): AssetUrl {
+    const start = assetUrl.indexOf("{");
+    const finish = assetUrl.indexOf("}");
+    assetUrl = assetUrl.substring(start + 1, finish);
+    const [templateType, version, multiCodec, fieldName, hashType] = assetUrl.split(":");
+    return {
+      templateType,
+      version: parseInt(version) as 0 | 1,
+      multiCodec: multiCodec as CodecName,
+      fieldName,
+      hashType: hashType as HashName,
+    };
   }
 
   static async getDigitalMedia(

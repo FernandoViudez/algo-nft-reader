@@ -18,21 +18,27 @@ export abstract class Arc69 {
     asaId: number,
     indexer: Indexer
   ) {
-    try {
       const response = (await indexer
         .lookupAssetTransactions(asaId)
         .txType("acfg")
         .do()) as any[];
       const lastTxn = response["transactions"].pop();
-      return JSON.parse(
-        Buffer.from(lastTxn.note, "base64").toString()
-      );
-    } catch (error) {
-      throw new Error(
-        `Arc 69 ${Errors.arcBadConfiugredNoteIsUndefinedOrInvalid}` +
-          error
-      );
-    }
+      if (!lastTxn || !lastTxn.note) {
+        return {
+          standard: ArcEnum.custom,
+        };
+      } else {
+        const decodedNote = Buffer.from(lastTxn.note, "base64").toString();
+        try {
+          return JSON.parse(
+            decodedNote
+          );
+        } catch (error) {
+          return {
+            standard: ArcEnum.custom,
+          };
+        }
+      }
   }
   static async getMetadata(
     info: AssetInfo,

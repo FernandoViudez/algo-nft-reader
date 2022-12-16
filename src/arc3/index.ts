@@ -8,7 +8,7 @@ import { createASADigitalMediaListHandler } from "../_utils/arc-metadata.utils";
 import { buildFetchUrlFromUrl } from "../_utils/fetch-path.utils";
 
 export abstract class Arc3 {
-  static checkIfValidArc(info: AssetInfo) {
+  static async checkIfValidArc(info: AssetInfo) {
     if (
       (info.params.url &&
         info.params.url?.endsWith("#" + ArcEnum.arc3)) ||
@@ -18,7 +18,6 @@ export abstract class Arc3 {
     ) {
       return true;
     }
-    return false;
   }
 
   static async getMetadata(info: AssetInfo): Promise<ArcMetadata> {

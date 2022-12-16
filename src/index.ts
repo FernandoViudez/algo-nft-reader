@@ -7,35 +7,49 @@ import { ArcMetadata } from "./types/json.scheme";
 import { checkIpfsGatewayPath } from "./_utils/ipfs.utils";
 
 export class Arc {
-  private indexerClient: Indexer;
-  static ipfsGateway: string = constants.defaultIpfsGateway;
+    private indexerClient: Indexer;
+    static ipfsGateway: string = constants.defaultIpfsGateway;
 
-  constructor(
-    private readonly indexerCredentials: IndexerCredentials,
-    private readonly ipfsGateway?: string
-  ) {
-    if (ipfsGateway) {
-      checkIpfsGatewayPath(ipfsGateway);
-      Arc.ipfsGateway = ipfsGateway;
+    constructor(
+        private readonly indexerCredentials: IndexerCredentials,
+        private readonly ipfsGateway?: string
+    ) {
+        if (ipfsGateway) {
+            checkIpfsGatewayPath(ipfsGateway);
+            Arc.ipfsGateway = ipfsGateway;
+        }
+        this.indexerClient = new Indexer(
+            indexerCredentials.token,
+            indexerCredentials.host,
+            indexerCredentials.port
+        );
     }
-    this.indexerClient = new Indexer(
-      indexerCredentials.token,
-      indexerCredentials.host,
-      indexerCredentials.port
-    );
-  }
 
-  async getAssetMetadata(asaId: number) {
-    const asset = new Asset(asaId, this.indexerClient);
-    await asset.resolveAsset();
-    return await asset.getMetadata();
-  }
+    private async initializeAsset(asaId: number): Promise<Asset> {
+        const asset = new Asset(asaId, this.indexerClient);
+        await asset.resolveAsset();
+        return asset;
+    }
 
-  async getAssetDigitalMedia(asaId: number) {
-    const asset = new Asset(asaId, this.indexerClient);
-    await asset.resolveAsset();
-    return await asset.getDigitalMedia();
-  }
+    async getStandard(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
+        return asset.standard;
+    }
+
+    async getAssetMetadata(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
+        return await asset.getMetadata();
+    }
+
+    async getAssetDigitalMedia(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
+        return await asset.getDigitalMedia();
+    }
+
+    async validateIntegrity(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
+        return await asset.validateIntegrity();
+    }
 }
 
 export { ArcMetadata, Arc69Metadata };
