@@ -4,6 +4,7 @@ import { Arc3 } from "./arc3";
 import { Arc69 } from "./arc69";
 import { Arc69Metadata } from "./arc69/types/json.scheme";
 import { ArcEnum } from "./enum/arc.enum";
+import { Errors } from "./enum/errors.enum";
 import { ASADigitalMedia } from "./types/asa-digital-media.interface";
 import { AssetInfo } from "./types/asset-info.interface";
 import { ArcMetadata } from "./types/json.scheme";
@@ -37,12 +38,16 @@ export class Asset {
     }
 
     private async getAssetInfo() {
-        const response = await this.indexerService
-            .lookupAssetByID(this.id)
-            .do();
-        // TODO: Add response formatter to replace kebab case to camel case (export that util function)
-        this.info = response["asset"] as AssetInfo;
-        return response["asset"] as AssetInfo;
+        try {
+            const response = await this.indexerService
+                .lookupAssetByID(this.id)
+                .do();
+            // TODO: Add response formatter to replace kebab case to camel case (export that util function)
+            this.info = response["asset"] as AssetInfo;
+            return response["asset"] as AssetInfo;
+        } catch (error) {
+            throw new Error(Errors.asaNotFound);            
+        }
     }
 
     private async setStandard() {
@@ -111,7 +116,7 @@ export class Asset {
         digitalMedia = formatMediaIntegrity(digitalMedia);
         let validIntegrity = true;
         let i = 0;
-        while (i <= digitalMedia.length || validIntegrity) {
+        while (i < digitalMedia.length && validIntegrity) {
             const realIntegrity = await getIntegrityB64(digitalMedia[i].media);
             if (digitalMedia[i].integrity != realIntegrity) {
                 validIntegrity = false;

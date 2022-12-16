@@ -18,7 +18,6 @@ export abstract class Arc69 {
     asaId: number,
     indexer: Indexer
   ) {
-    try {
       const response = (await indexer
         .lookupAssetTransactions(asaId)
         .txType("acfg")
@@ -28,16 +27,18 @@ export abstract class Arc69 {
         return {
           standard: ArcEnum.custom,
         };
+      } else {
+        const decodedNote = Buffer.from(lastTxn.note, "base64").toString();
+        try {
+          return JSON.parse(
+            decodedNote
+          );
+        } catch (error) {
+          return {
+            standard: ArcEnum.custom,
+          };
+        }
       }
-      return JSON.parse(
-        Buffer.from(lastTxn.note, "base64").toString()
-      );
-    } catch (error) {
-      throw new Error(
-        `Arc 69 ${Errors.arcBadConfiugredNoteIsUndefinedOrInvalid}` +
-          error
-      );
-    }
   }
   static async getMetadata(
     info: AssetInfo,
