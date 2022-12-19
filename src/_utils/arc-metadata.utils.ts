@@ -11,6 +11,7 @@ export function createASADigitalMediaListHandler(
   if ((metadata as ArcMetadata)?.image?.length)
     _createASADigitalMediaListForCompatibleArcs(
       mediaList,
+      info,
       <ArcMetadata>metadata
     );
   else
@@ -25,6 +26,7 @@ export function createASADigitalMediaListHandler(
 // Used for arc 3 & arc 19
 function _createASADigitalMediaListForCompatibleArcs(
   media: ASADigitalMedia[],
+  info: AssetInfo,
   metadata: ArcMetadata
 ): void {
   if (metadata.image?.length) {
@@ -33,6 +35,8 @@ function _createASADigitalMediaListForCompatibleArcs(
     };
     if (metadata.image?.startsWith("https://"))
       mediaObject.integrity = metadata?.image_integrity || "";
+    else if (!metadata.image?.startsWith("ipfs://"))
+      mediaObject.media = info.params.url.split("#arc3")[0] + '/' + metadata.image;
 
     media.push(mediaObject);
   }
