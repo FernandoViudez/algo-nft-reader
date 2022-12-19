@@ -46,7 +46,7 @@ export class Asset {
             this.info = response["asset"] as AssetInfo;
             return response["asset"] as AssetInfo;
         } catch (error) {
-            throw new Error(Errors.asaNotFound);            
+            throw new Error(Errors.asaNotFound);
         }
     }
 
@@ -111,7 +111,7 @@ export class Asset {
         }
     }
 
-    async validateIntegrity() {
+    async validateDigitalMediaIntegrity() {
         let digitalMedia = await this.getDigitalMedia();
         digitalMedia = formatMediaIntegrity(digitalMedia);
         let validIntegrity = true;
@@ -124,5 +124,30 @@ export class Asset {
             i++;
         }
         return validIntegrity;
+    }
+
+    async validateMetadataIntegrity() {
+        let metadataIntegrity: string;
+        let realIntegrity: string;
+        switch (this.standard) {
+            case ArcEnum.arc3: {
+                metadataIntegrity = Arc3.getMetadataIntegrity(this.info);
+                break;
+            }
+            case ArcEnum.arc19:
+            case ArcEnum.arc69: {
+                return true
+            }
+            default: {
+                throw new Error(
+                    `Asset with id ${this.id} has not a valid standard (arc)`
+                );
+            }
+        }
+        if (metadataIntegrity) {
+            realIntegrity = await getIntegrityB64(this.info.params.url);
+            return metadataIntegrity != realIntegrity;
+        }
+        return true;
     }
 }
