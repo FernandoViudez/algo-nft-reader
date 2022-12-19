@@ -11,18 +11,22 @@ export class Arc {
     static ipfsGateway: string = constants.defaultIpfsGateway;
 
     constructor(
-        private readonly indexerCredentials: IndexerCredentials,
+        private readonly indexer: IndexerCredentials | Indexer,
         private readonly ipfsGateway?: string
     ) {
         if (ipfsGateway) {
             checkIpfsGatewayPath(ipfsGateway);
             Arc.ipfsGateway = ipfsGateway;
         }
-        this.indexerClient = new Indexer(
-            indexerCredentials.token,
-            indexerCredentials.host,
-            indexerCredentials.port
-        );
+        if(indexer instanceof Indexer) {
+            this.indexerClient = indexer;
+        } else {
+            this.indexerClient = new Indexer(
+                indexer.token,
+                indexer.host,
+                indexer.port
+            );
+        }
     }
 
     private async initializeAsset(asaId: number): Promise<Asset> {
