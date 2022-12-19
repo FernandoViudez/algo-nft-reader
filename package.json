@@ -1,7 +1,7 @@
 {
-  "name": "arcs",
+  "name": "nft-arcs",
   "version": "1.0.0",
-  "description": "Arcs metadata abstraction",
+  "description": "Arcs abstraction for NFTs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -15,7 +15,6 @@
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
-    "algosdk": "^1.24.0",
     "axios": "^1.2.1",
     "chai": "^4.3.7",
     "mocha": "^10.1.0",
@@ -24,13 +23,10 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@ipld/dag-pb": "^2.0.1",
     "algosdk": "^1.24.0",
     "cid-tool": "^3.0.0",
     "cids": "^1.1.9",
-    "is-ipfs": "^7.0.3",
     "is-url": "^1.2.4",
-    "js-sha512": "^0.8.0",
     "multiformats": "^9.9.0",
     "multihashes": "^4.0.3"
   }
