@@ -41,4 +41,12 @@ export abstract class Arc3 {
       throw new Error(`Arc 3  ${Errors.arcBadConfigured} ` + error);
     }
   }
+
+  static getMetadataIntegrity(info: AssetInfo) {
+    if (info.params.url.startsWith("ipfs://")) {
+      return undefined;
+    } else {
+      return info.params["metadata-hash"];
+    }
+  }
 }

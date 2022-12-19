@@ -46,9 +46,14 @@ export class Arc {
         return await asset.getDigitalMedia();
     }
 
-    async validateIntegrity(asaId: number) {
+    async validateDigitalMediaIntegrity(asaId: number) {
         const asset = await this.initializeAsset(asaId);
-        return await asset.validateIntegrity();
+        return await asset.validateDigitalMediaIntegrity();
+    }
+    
+    async validateMetadataIntegrity(asaId: number) {
+        const asset = await this.initializeAsset(asaId);
+        return await asset.validateMetadataIntegrity();
     }
 }
 
