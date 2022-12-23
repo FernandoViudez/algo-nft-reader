@@ -23,10 +23,17 @@ export abstract class Arc3 {
   static async getMetadata(info: AssetInfo): Promise<ArcMetadata> {
     try {
       const fetchUrl = buildFetchUrlFromUrl(info.params.url);
-      return (await axios.get(fetchUrl)).data;
+      const response = (await axios.get(fetchUrl, { responseType: "text" })).data.trim();
+      if (
+        response.startsWith("{") &&
+        response.endsWith("}")
+      ) {
+        return JSON.parse(response);
+      }
     } catch (error) {
       throw new Error(`Arc 3  ${Errors.arcBadConfigured} ` + error);
     }
+    throw new Error(Errors.invalidMetadata);
   }
 
   static async getDigitalMedia(
