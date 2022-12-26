@@ -8,7 +8,8 @@ export function createASADigitalMediaListHandler(
   metadata: ArcMetadata | Arc69Metadata
 ): ASADigitalMedia[] {
   const mediaList: ASADigitalMedia[] = [];
-  if ((metadata as ArcMetadata)?.image?.length)
+  // TODO: Use standard property of asset instead
+  if (!(metadata as Arc69Metadata)?.standard)
     _createASADigitalMediaListForCompatibleArcs(
       mediaList,
       info,
