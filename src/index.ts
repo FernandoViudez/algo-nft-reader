@@ -4,7 +4,7 @@ import { Asset } from "./asset";
 import { constants } from "./constants";
 import { IndexerCredentials } from "./types/indexer.interface";
 import { ArcMetadata } from "./types/json.scheme";
-import { checkIpfsGatewayPath } from "./_utils/ipfs.utils";
+import { checkIpfsGatewayPath, fromCIDToAddress, getCIDFromAddress } from "./_utils/ipfs.utils";
 
 export class Arc {
     private indexerClient: Indexer;
@@ -61,4 +61,4 @@ export class Arc {
     }
 }
 
-export { ArcMetadata, Arc69Metadata };
+export { ArcMetadata, Arc69Metadata, fromCIDToAddress, getCIDFromAddress };

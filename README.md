@@ -59,7 +59,8 @@ const NFTArc = new Arc(indexerClient);
 ```
 
 ### TODO:
-- testing
+- testing cases for arc69
+- add prettier
 - getStandard() should return an array of arcs
 - extra-metadata support
 - localization metadata field integrity check

@@ -23,7 +23,7 @@ describe("Get ARC3 digital media", function() {
         ])
     })
     
-    it("should return empty string when passing url without digital media", async function() {
+    it("should return empty array when passing url without digital media", async function() {
         const creator = generateAccount().addr;
         const asaInfo = {
             index: 1,
