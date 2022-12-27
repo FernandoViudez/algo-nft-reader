@@ -1,13 +1,16 @@
 ## Arcs lib
 
 ## Motivation
+
 Abstract the NFTs manipulation from the business logic. While NFTs can follow different ARC's, this library should abstract the ways of decoding metadata or digital media to show into the different marketplaces.
 The main idea is to handle metadata & digital media of the NFT easily, doesn't matter the ARC the NFT is following. You as client, should not understand the ARCs to develop under Algorand.
 
 ## Available methods (from any NFT following arcs: 3, 19, or 69)
+
 Arc class:
+
 - getStandard(): <arc3 | arc19 | arc69 | custom>
-- getAssetMetadata() 
+- getAssetMetadata()
 - getAssetDigitalMedia()
 - validateDigitalMediaIntegrity()
 - validateMetadataIntegrity()
@@ -15,12 +18,15 @@ Arc class:
 ## Examples
 
 #### Installation
+
 ```
 npm i nft-arcs
 ```
 
 #### Getting started
+
 ##### Typescript
+
 ```
 import { Arc } from 'nft-arcs';
 const NFTArc = new Arc({
@@ -29,12 +35,15 @@ const NFTArc = new Arc({
     port: '8980',
 });
 ```
+
 ##### Javascript vanilla
+
 ```
 const { Arc } = require('nft-arcs');
 ```
 
 #### Getting metadata from ASA id
+
 ```
 import { Arc } from 'nft-arcs';
 const NFTArc = new Arc({
@@ -48,7 +57,8 @@ console.log(metadata);
 ```
 
 #### From existing Indexer instance
-``` 
+
+```
 import { Indexer } from 'algosdk';
 const token  = "";
 const server = "http://localhost";
@@ -59,10 +69,10 @@ const NFTArc = new Arc(indexerClient);
 ```
 
 ### TODO:
+
 - testing cases for arc69
-- add prettier
 - getStandard() should return an array of arcs
 - extra-metadata support
 - localization metadata field integrity check
 - v2:
-    - methods for creating NFTs according client needs
+  - methods for creating NFTs according client needs
