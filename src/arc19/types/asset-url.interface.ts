@@ -1,10 +1,10 @@
-import { CodecName } from "cids";
-import { HashName } from "multihashes";
+import { CodecName } from 'cids';
+import { HashName } from 'multihashes';
 
 export interface AssetUrl {
-    templateType: string;
-    version: 0 | 1;
-    multiCodec: CodecName; 
-    fieldName: string; 
-    hashType: HashName;
+  templateType: string;
+  version: 0 | 1;
+  multiCodec: CodecName;
+  fieldName: string;
+  hashType: HashName;
 }

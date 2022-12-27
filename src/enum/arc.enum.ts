@@ -1,6 +1,6 @@
 export enum ArcEnum {
-    arc3 = 'arc3',
-    arc19 = 'arc19',
-    arc69 = 'arc69',
-    custom = 'custom',
+  arc3 = 'arc3',
+  arc19 = 'arc19',
+  arc69 = 'arc69',
+  custom = 'custom',
 }

@@ -1,4 +1,4 @@
 export interface Base {
-    name: string;
-    code: number;
+  name: string;
+  code: number;
 }

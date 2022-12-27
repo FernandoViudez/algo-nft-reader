@@ -1,3 +1,3 @@
 export const constants = {
-    defaultIpfsGateway: 'https://ipfs.io/ipfs/'
-}
+  defaultIpfsGateway: 'https://ipfs.io/ipfs/',
+};
