@@ -49,7 +49,7 @@ export class Asset {
   }
 
   private async setStandard() {
-    if (Arc19.checkIfValidArc(this.info)) {
+    if (Arc19.checkIfValidArc(this.info.params.url)) {
       this.arc = ArcEnum.arc19;
     } else if (await Arc69.checkIfValidArc(this.info, this.indexerService)) {
       this.arc = ArcEnum.arc69;

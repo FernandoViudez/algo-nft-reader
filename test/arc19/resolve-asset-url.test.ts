@@ -14,9 +14,9 @@ describe('Resolve asset URL - ARC19', function () {
   it('should fail when passing invalid asset url', function () {
     try {
       Arc19.resolveAssetUrl('template-ipfs://{ipfscid,0,dag-pb,sha-256}');
-      assert.fail();
     } catch (error) {
-      assert.ok(error);
+      return assert.ok(error);
     }
+    assert.fail();
   });
 });

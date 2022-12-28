@@ -11,9 +11,9 @@ import { AssetUrl } from './types/asset-url.interface';
 import { getCIDFromAddress } from '../_utils/ipfs.utils';
 
 export abstract class Arc19 {
-  static checkIfValidArc(info: AssetInfo): boolean {
+  static checkIfValidArc(assetUrl: string): boolean {
     const regex = `template-ipfs:\/\/{ipfscid:([01]):([a-z0-9\-]+):([a-z0-9\-]+):([a-z0-9\-]+)}`;
-    if (info.params.url.match(regex)) {
+    if (assetUrl.match(regex)) {
       return true;
     }
     return false;
@@ -30,6 +30,9 @@ export abstract class Arc19 {
   }
 
   static resolveAssetUrl(assetUrl: string): AssetUrl {
+    if (!this.checkIfValidArc(assetUrl)) {
+      throw new Error(Errors.invalidAssetUrlTemplate);
+    }
     const start = assetUrl.indexOf('{');
     const finish = assetUrl.indexOf('}');
     assetUrl = assetUrl.substring(start + 1, finish);
