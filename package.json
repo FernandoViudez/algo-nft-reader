@@ -1,6 +1,6 @@
 {
   "name": "nft-arcs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Arcs abstraction for NFTs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
