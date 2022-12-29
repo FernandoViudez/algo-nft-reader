@@ -32,7 +32,7 @@ describe('Get ARC19 metadata', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 
   it('should fail when url has invalid version', async function () {
@@ -50,7 +50,7 @@ describe('Get ARC19 metadata', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 
   it('should fail when url has invalid codec name', async function () {
@@ -68,7 +68,7 @@ describe('Get ARC19 metadata', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 
   it('should fail when url not match the pattern for ARC19', async function () {
@@ -86,6 +86,6 @@ describe('Get ARC19 metadata', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 });

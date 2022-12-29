@@ -63,7 +63,7 @@ describe('get ARC69 metadata', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 
   it('should fail when NFT metadata is not a json', async function () {
@@ -87,6 +87,6 @@ describe('get ARC69 metadata', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 });
