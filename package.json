@@ -1,7 +1,7 @@
 {
-  "name": "nft-arcs",
+  "name": "nft-reader",
   "version": "1.0.7",
-  "description": "Arcs abstraction for NFTs",
+  "description": "NFT reader for Algorand blockchain",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
