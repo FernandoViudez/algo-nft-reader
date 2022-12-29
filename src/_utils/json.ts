@@ -1,6 +1,8 @@
 export const isJson = (val: any) => {
   try {
-    val = JSON.stringify(val);
+    if (typeof val == 'object') {
+      val = JSON.stringify(val).trim();
+    }
     return val.startsWith('{') && val.endsWith('}');
   } catch (error) {
     return false;
