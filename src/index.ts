@@ -6,7 +6,7 @@ import { IndexerCredentials } from './types/indexer.interface';
 import { ArcMetadata } from './types/json.scheme';
 import { checkIpfsGatewayPath, fromCIDToAddress, getCIDFromAddress } from './_utils/ipfs.utils';
 
-export class Arc {
+export class NFTReader {
   private indexerClient: Indexer;
   static ipfsGateway: string = constants.defaultIpfsGateway;
 
@@ -16,7 +16,7 @@ export class Arc {
   ) {
     if (ipfsGateway) {
       checkIpfsGatewayPath(ipfsGateway);
-      Arc.ipfsGateway = ipfsGateway;
+      NFTReader.ipfsGateway = ipfsGateway;
     }
     if (indexer instanceof Indexer) {
       this.indexerClient = indexer;

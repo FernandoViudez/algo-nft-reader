@@ -1,7 +1,7 @@
 import { decodeAddress, encodeAddress } from 'algosdk';
 import { CID } from 'multiformats/cid';
 import { encode, decode } from 'multihashes';
-import { Arc } from '..';
+import { NFTReader } from '..';
 import { Arc19 } from '../arc19';
 import { AssetInfo } from '../types/asset-info.interface';
 import { getHashCodeFromName, getCodecCodeFromName } from './multiformats.utils';
@@ -32,7 +32,7 @@ export function buildIpfsPath(assetUrl: string) {
   if (assetUrl.endsWith('#arc3')) {
     cid = cid.split('#arc3')[0]; // for incompatible apps on arc3
   }
-  return Arc.ipfsGateway + cid;
+  return NFTReader.ipfsGateway + cid;
 }
 
 export function fromCIDToAddress(cid: string) {
