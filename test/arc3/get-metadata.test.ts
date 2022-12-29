@@ -17,7 +17,7 @@ describe('Get ARC3 metadata', function () {
       });
       assert.ok(response);
     } catch (error) {
-      assert.fail(error);
+      throw new Error(error);
     }
   });
 
@@ -34,7 +34,7 @@ describe('Get ARC3 metadata', function () {
       });
       assert.ok(response);
     } catch (error) {
-      assert.fail(error);
+      throw new Error(error);
     }
   });
 

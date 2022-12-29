@@ -7,7 +7,7 @@ describe('Resolve asset URL - ARC19', function () {
       const response = Arc19.resolveAssetUrl('template-ipfs://{ipfscid:0:dag-pb:reserve:sha2-256}');
       assert.ok(response);
     } catch (error) {
-      assert.fail();
+      throw new Error();
     }
   });
 
@@ -17,6 +17,6 @@ describe('Resolve asset URL - ARC19', function () {
     } catch (error) {
       return assert.ok(error);
     }
-    assert.fail();
+    throw new Error();
   });
 });

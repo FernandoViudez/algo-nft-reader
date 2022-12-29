@@ -1,14 +1,18 @@
 {
   "name": "nft-reader",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "description": "NFT reader for Algorand blockchain",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --timeout 10000 -r ts-node/register -r dotenv/config 'test/**/*.test.ts' ",
+    "publish:custom": "npm run test && npm run build && npm publish",
     "prebuild": "rimraf dist",
     "build": "tsc"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "Algorand",
     "NFT",
@@ -30,7 +34,7 @@
     "rimraf": "^3.0.2",
     "sinon": "^15.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.7.4"
   },
   "dependencies": {
     "algosdk": "^1.24.0",
