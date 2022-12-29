@@ -26,7 +26,7 @@ Arc class:
 #### Installation
 
 ```
-npm i nft-arcs
+npm i nft-reader
 ```
 
 #### Getting started
@@ -34,8 +34,8 @@ npm i nft-arcs
 ##### Typescript
 
 ```
-import { Arc } from 'nft-arcs';
-const NFTArc = new Arc({
+import { NFTReader } from 'nft-reader';
+const nftReader = new NFTReader({
     token: '',
     host: 'http://localhost',
     port: '8980',
@@ -45,20 +45,20 @@ const NFTArc = new Arc({
 ##### Javascript vanilla
 
 ```
-const { Arc } = require('nft-arcs');
+const { NFTReader } = require('nft-reader');
 ```
 
 #### Getting metadata from ASA id
 
 ```
-import { Arc } from 'nft-arcs';
-const NFTArc = new Arc({
+import { NFTReader } from 'nft-reader';
+const nftReader = new NFTReader({
     token: '',
     host: 'http://localhost',
     port: '8980',
 });
 const asaId = 1;
-const metadata = await NFTArc.getAssetMetadata(asaId);
+const metadata = await nftReader.getAssetMetadata(asaId);
 console.log(metadata);
 ```
 
@@ -71,7 +71,7 @@ const server = "http://localhost";
 const port   = 8980;
 const indexerClient = new Indexer(token, server, port);
 
-const NFTArc = new Arc(indexerClient);
+const nftReader = new NFTReader(indexerClient);
 ```
 
 ### TODO:
