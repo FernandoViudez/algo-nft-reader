@@ -2,6 +2,7 @@ import { Indexer } from 'algosdk';
 import { expect } from 'chai';
 import { SinonSandbox, SinonStub, createSandbox } from 'sinon';
 import { Arc69 } from '../../src/arc69/index';
+import { setMockObj } from './utils/mock';
 
 let sandbox: SinonSandbox;
 let mockObj: SinonStub;
@@ -18,35 +19,28 @@ describe('Get last cfg txn note', function () {
   });
 
   it('should pass when note is correctly parsed & exists', async function () {
-    mockObj.callsFake(() =>
-      Promise.resolve({
-        transactions: [
-          {
-            note: Buffer.from(`{"standard":"arc69"}`).toString('base64'),
-          },
-        ],
-      })
-    );
+    setMockObj({
+      mockObj,
+      NFTmetadata: { standard: 'arc69' },
+    });
     const res = await Arc69.getLastCfgTxnNoteParsed(1, indexer);
     expect(res).eql({ standard: 'arc69' });
   });
 
   it('should fail when txn not exists', async function () {
-    mockObj.callsFake(() =>
-      Promise.resolve({
-        transactions: [],
-      })
-    );
+    setMockObj({
+      mockObj,
+      emptyResponse: true,
+    });
     const res = await Arc69.getLastCfgTxnNoteParsed(1, indexer);
     expect(res).eql({ standard: 'custom' });
   });
 
   it('should fail when txn note is not present', async function () {
-    mockObj.callsFake(() =>
-      Promise.resolve({
-        transactions: [{}],
-      })
-    );
+    setMockObj({
+      mockObj,
+      emptyTxn: true,
+    });
     const res = await Arc69.getLastCfgTxnNoteParsed(1, indexer);
     expect(res).eql({ standard: 'custom' });
   });

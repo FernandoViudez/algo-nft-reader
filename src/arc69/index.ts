@@ -12,8 +12,7 @@ export abstract class Arc69 {
     return metadata.standard === ArcEnum.arc69;
   }
   static async getLastCfgTxnNoteParsed(asaId: number, indexer: Indexer) {
-    const response = await this.lookupLastAssetCfgTxn(asaId, indexer);
-    const lastTxn = response['transactions'].pop();
+    const lastTxn = await this.lookupLastAssetCfgTxn(asaId, indexer);
     if (!lastTxn || !lastTxn.note) {
       return {
         standard: ArcEnum.custom,
@@ -48,9 +47,6 @@ export abstract class Arc69 {
     }
   }
   static async lookupLastAssetCfgTxn(asaId: number, indexer: Indexer) {
-    return (await indexer.lookupAssetTransactions(asaId).txType('acfg').do()) as Record<
-      string,
-      any
-    >;
+    return (await indexer.lookupAssetTransactions(asaId).txType('acfg').do())['transactions'].pop();
   }
 }

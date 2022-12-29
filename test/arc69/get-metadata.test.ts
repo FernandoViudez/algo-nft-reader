@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { SinonSandbox, SinonStub, createSandbox } from 'sinon';
 import { Arc69 } from '../../src/arc69/index';
 import * as assert from 'assert';
+import { setMockObj } from './utils/mock';
 
 let indexer = new Indexer('', process.env.INDEXER_HOST, process.env.INDEXER_PORT);
 let sandbox: SinonSandbox;
@@ -22,15 +23,10 @@ describe('get ARC69 metadata', function () {
     let expectedMetadata = {
       standard: 'arc69',
     };
-    mockObj.callsFake(() =>
-      Promise.resolve({
-        transactions: [
-          {
-            note: Buffer.from(JSON.stringify(expectedMetadata)).toString('base64'),
-          },
-        ],
-      })
-    );
+    setMockObj({
+      mockObj,
+      NFTmetadata: expectedMetadata,
+    });
     const metadata = await Arc69.getMetadata(
       {
         index: 1,
@@ -47,11 +43,10 @@ describe('get ARC69 metadata', function () {
   });
 
   it('should fail when NFT has not cfg txns', async function () {
-    mockObj.callsFake(() =>
-      Promise.resolve({
-        transactions: [],
-      })
-    );
+    setMockObj({
+      mockObj,
+      emptyResponse: true,
+    });
     try {
       await Arc69.getMetadata(
         {
@@ -72,15 +67,10 @@ describe('get ARC69 metadata', function () {
   });
 
   it('should fail when NFT metadata is not a json', async function () {
-    mockObj.callsFake(() =>
-      Promise.resolve({
-        transactions: [
-          {
-            note: Buffer.from('test').toString('base64'),
-          },
-        ],
-      })
-    );
+    setMockObj({
+      mockObj,
+      NFTmetadata: 'test',
+    });
     try {
       await Arc69.getMetadata(
         {

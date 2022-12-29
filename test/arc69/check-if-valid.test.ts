@@ -2,6 +2,7 @@ import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 import { Arc69 } from '../../src/arc69/index';
 import { generateAccount, Indexer } from 'algosdk';
 import * as assert from 'assert';
+import { setMockObj } from './utils/mock';
 
 let sandbox: SinonSandbox;
 let mockObj: SinonStub;
@@ -18,11 +19,13 @@ describe('Check if valid ARC69', function () {
   });
 
   it('should pass when valid NFT txn note is passed', async function () {
-    mockObj.callsFake(() =>
-      Promise.resolve({
+    setMockObj({
+      mockObj,
+      isTxn: false,
+      NFTmetadata: {
         standard: 'arc69',
-      })
-    );
+      },
+    });
     const res = await Arc69.checkIfValidArc(
       {
         index: 1,
@@ -39,7 +42,11 @@ describe('Check if valid ARC69', function () {
   });
 
   it('should fail when NFT has not a valid metadata schema', async function () {
-    mockObj.callsFake(() => Promise.resolve({}));
+    setMockObj({
+      mockObj,
+      isTxn: false,
+      emptyResponse: true,
+    });
     const res = await Arc69.checkIfValidArc(
       {
         index: 1,
