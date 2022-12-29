@@ -6,6 +6,7 @@ import { AssetInfo } from '../types/asset-info.interface';
 import { ArcMetadata } from '../types/json.scheme';
 import { createASADigitalMediaListHandler } from '../_utils/arc-metadata.utils';
 import { buildFetchUrlFromUrl } from '../_utils/fetch-path.utils';
+import { isJson } from '../_utils/json';
 
 export abstract class Arc3 {
   static async checkIfValidArc(info: AssetInfo) {
@@ -23,7 +24,7 @@ export abstract class Arc3 {
     try {
       const fetchUrl = buildFetchUrlFromUrl(info.params.url);
       const response = (await axios.get(fetchUrl, { responseType: 'text' })).data.trim();
-      if (response.startsWith('{') && response.endsWith('}')) {
+      if (isJson(response)) {
         return JSON.parse(response);
       }
     } catch (error) {

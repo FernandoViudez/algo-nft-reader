@@ -12,8 +12,7 @@ export abstract class Arc69 {
     return metadata.standard === ArcEnum.arc69;
   }
   static async getLastCfgTxnNoteParsed(asaId: number, indexer: Indexer) {
-    const response = (await indexer.lookupAssetTransactions(asaId).txType('acfg').do()) as any[];
-    const lastTxn = response['transactions'].pop();
+    const lastTxn = await this.lookupLastAssetCfgTxn(asaId, indexer);
     if (!lastTxn || !lastTxn.note) {
       return {
         standard: ArcEnum.custom,
@@ -32,6 +31,9 @@ export abstract class Arc69 {
   static async getMetadata(info: AssetInfo, indexer: Indexer): Promise<Arc69Metadata> {
     try {
       const metadata = await this.getLastCfgTxnNoteParsed(info.index, indexer);
+      if (metadata.standard == ArcEnum.custom) {
+        throw new Error();
+      }
       return metadata;
     } catch (error) {
       throw new Error(`Arc 69 ${Errors.arcBadConfigured} ` + error);
@@ -43,5 +45,8 @@ export abstract class Arc69 {
     } catch (error) {
       throw new Error(`Arc 69 ${Errors.arcBadConfigured} ` + error);
     }
+  }
+  static async lookupLastAssetCfgTxn(asaId: number, indexer: Indexer) {
+    return (await indexer.lookupAssetTransactions(asaId).txType('acfg').do())['transactions'].pop();
   }
 }

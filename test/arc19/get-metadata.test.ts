@@ -29,10 +29,10 @@ describe('Get ARC19 metadata', function () {
           url: 'template-ipfs://{ipfscid:0:dag-pb:reserve:sha2-512}',
         },
       });
-      assert.fail();
     } catch (error) {
-      assert.ok(error);
+      return assert.ok(error);
     }
+    assert.fail();
   });
 
   it('should fail when url has invalid version', async function () {
@@ -47,10 +47,10 @@ describe('Get ARC19 metadata', function () {
           url: 'template-ipfs://{ipfscid:2:dag-pb:reserve:sha2-256}',
         },
       });
-      assert.fail();
     } catch (error) {
-      assert.ok(error);
+      return assert.ok(error);
     }
+    assert.fail();
   });
 
   it('should fail when url has invalid codec name', async function () {
@@ -65,10 +65,10 @@ describe('Get ARC19 metadata', function () {
           url: 'template-ipfs://{ipfscid:0:aaaaaa:reserve:sha2-256}',
         },
       });
-      assert.fail();
     } catch (error) {
-      assert.ok(error);
+      return assert.ok(error);
     }
+    assert.fail();
   });
 
   it('should fail when url not match the pattern for ARC19', async function () {
@@ -83,9 +83,9 @@ describe('Get ARC19 metadata', function () {
           url: 'ipfs://{ipfscid:0:dag-pb:reserve:sha2-256}',
         },
       });
-      assert.fail();
     } catch (error) {
-      assert.ok(error);
+      return assert.ok(error);
     }
+    assert.fail();
   });
 });

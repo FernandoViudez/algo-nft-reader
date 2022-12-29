@@ -1,11 +1,11 @@
 {
   "name": "nft-arcs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Arcs abstraction for NFTs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha --timeout 10000 -r ts-node/register -r dotenv/config 'test/**/*.ts' ",
+    "test": "mocha --timeout 10000 -r ts-node/register -r dotenv/config 'test/**/*.test.ts' ",
     "prebuild": "rimraf dist",
     "build": "tsc"
   },
@@ -17,13 +17,18 @@
   "author": "Indelve",
   "license": "ISC",
   "devDependencies": {
+    "@algo-builder/algob": "^7.0.0",
+    "@algo-builder/runtime": "^7.0.0",
+    "@algo-builder/web": "^7.0.0",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
+    "@types/sinon": "^10.0.13",
     "chai": "^4.3.7",
     "dotenv": "^16.0.3",
     "mocha": "^10.1.0",
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
+    "sinon": "^15.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3"
   },
