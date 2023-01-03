@@ -1,4 +1,5 @@
 import { decodeAddress, encodeAddress } from 'algosdk';
+import { isCID } from 'cids';
 import { CID } from 'multiformats/cid';
 import { encode, decode } from 'multihashes';
 import { NFTReader } from '..';
@@ -19,6 +20,21 @@ export function checkIpfsGatewayPath(ipfsGateway: string) {
     !isUrl(ipfsGateway)
   ) {
     throw new Error('Invalid gateway');
+  }
+}
+
+/**
+ * Should follow this structure: "ipfs://<CID>"
+ * @param ipfsTemplate
+ */
+export function checkIfValidIpfsMetadataTemplate(ipfsTemplate: string) {
+  try {
+    if (!ipfsTemplate.startsWith('ipfs://') || !isCID(ipfsTemplate.split('://')[1])) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    return false;
   }
 }
 

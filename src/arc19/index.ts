@@ -9,14 +9,29 @@ import { createASADigitalMediaListHandler } from '../_utils/arc-metadata.utils';
 import { buildFetchUrlFromUrl, fromCidToIpfsTemplate } from '../_utils/fetch-path.utils';
 import { AssetUrl } from './types/asset-url.interface';
 import { getCIDFromAddress } from '../_utils/ipfs.utils';
+import { MetadataSchema } from '../schema/metadata.schema';
+import { validateMetadata } from '../_utils/validate.utils';
 
 export abstract class Arc19 {
-  static checkIfValidArc(assetUrl: string): boolean {
+  static async isValidArc(info: AssetInfo) {
+    return this.isValidTemplate(info.params.url) && (await this.isValidMetadata(info));
+  }
+
+  static isValidTemplate(assetUrl: string): boolean {
     const regex = `template-ipfs:\/\/{ipfscid:([01]):([a-z0-9\-]+):([a-z0-9\-]+):([a-z0-9\-]+)}`;
     if (assetUrl.match(regex)) {
       return true;
     }
     return false;
+  }
+
+  static async isValidMetadata(info: AssetInfo) {
+    const cid = getCIDFromAddress(info);
+    const fetchUrl = buildFetchUrlFromUrl(fromCidToIpfsTemplate(cid));
+    const response = (await axios.get(fetchUrl)).data;
+    const metadata: MetadataSchema = Object.assign(new MetadataSchema(), response);
+    const errors = await validateMetadata(metadata);
+    return !errors.length;
   }
 
   static async getMetadata(info: AssetInfo): Promise<ArcMetadata> {
@@ -30,7 +45,7 @@ export abstract class Arc19 {
   }
 
   static resolveAssetUrl(assetUrl: string): AssetUrl {
-    if (!this.checkIfValidArc(assetUrl)) {
+    if (!this.isValidTemplate(assetUrl)) {
       throw new Error(Errors.invalidAssetUrlTemplate);
     }
     const start = assetUrl.indexOf('{');

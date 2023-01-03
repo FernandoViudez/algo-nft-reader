@@ -26,7 +26,7 @@ describe('Check if valid ARC69', function () {
         standard: 'arc69',
       },
     });
-    const res = await Arc69.checkIfValidArc(
+    const res = await Arc69.isValidArc(
       {
         index: 1,
         params: {
@@ -47,7 +47,7 @@ describe('Check if valid ARC69', function () {
       isTxn: false,
       emptyResponse: true,
     });
-    const res = await Arc69.checkIfValidArc(
+    const res = await Arc69.isValidArc(
       {
         index: 1,
         params: {

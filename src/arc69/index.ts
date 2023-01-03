@@ -4,13 +4,22 @@ import { Errors } from '../enum/errors.enum';
 import { ASADigitalMedia } from '../types/asa-digital-media.interface';
 import { AssetInfo } from '../types/asset-info.interface';
 import { createASADigitalMediaListHandler } from '../_utils/arc-metadata.utils';
+import { validateMetadata } from '../_utils/validate.utils';
+import { MetadataSchema } from './schema/metadata.schema';
 import { Arc69Metadata } from './types/json.scheme';
 
 export abstract class Arc69 {
-  static async checkIfValidArc(asaInfo: AssetInfo, indexer: Indexer) {
+  static async isValidArc(asaInfo: AssetInfo, indexer: Indexer) {
     const metadata = await Arc69.getLastCfgTxnNoteParsed(asaInfo.index, indexer);
-    return metadata.standard === ArcEnum.arc69;
+    return await this.isValidMetadata(metadata);
   }
+
+  static async isValidMetadata(metadata: any) {
+    const metadataValidationClass: MetadataSchema = Object.assign(new MetadataSchema(), metadata);
+    const errors = await validateMetadata(metadataValidationClass);
+    return !errors.length;
+  }
+
   static async getLastCfgTxnNoteParsed(asaId: number, indexer: Indexer) {
     const lastTxn = await this.lookupLastAssetCfgTxn(asaId, indexer);
     if (!lastTxn || !lastTxn.note) {
