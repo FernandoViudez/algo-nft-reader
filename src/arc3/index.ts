@@ -11,6 +11,7 @@ import { buildFetchUrlFromUrl } from '../_utils/fetch-path.utils';
 import { checkIfValidIpfsMetadataTemplate } from '../_utils/ipfs.utils';
 import { isJson } from '../_utils/json';
 import { validateMetadata } from '../_utils/validate.utils';
+import { CreateArc3 } from './types/create-asa.interface';
 
 export abstract class Arc3 {
   static async isValidArc(assetUrl: string, assetName: string) {
@@ -80,23 +81,7 @@ export abstract class Arc3 {
     unitName,
     rekeyTo,
     note,
-  }: {
-    client: Algodv2;
-    defaultFrozen?: boolean;
-    metadataURI: string;
-    metadataHash?: string;
-    from: string;
-    decimals: number;
-    total: number;
-    assetName?: string;
-    clawback?: string;
-    freeze?: string;
-    manager?: string;
-    reserve?: string;
-    unitName?: string;
-    rekeyTo?: string;
-    note?: Uint8Array;
-  }) {
+  }: CreateArc3) {
     if (!checkIfValidIpfsMetadataTemplate(metadataURI) && !metadataHash) {
       throw new Error('Integrity of metadata is required if decentralized service its not used.');
     }

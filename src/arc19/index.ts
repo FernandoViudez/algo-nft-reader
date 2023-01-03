@@ -8,9 +8,11 @@ import { ArcMetadata } from '../types/json.scheme';
 import { createASADigitalMediaListHandler } from '../_utils/arc-metadata.utils';
 import { buildFetchUrlFromUrl, fromCidToIpfsTemplate } from '../_utils/fetch-path.utils';
 import { AssetUrl } from './types/asset-url.interface';
-import { getCIDFromAddress } from '../_utils/ipfs.utils';
+import { fromCIDToAddress, getCIDFromAddress } from '../_utils/ipfs.utils';
 import { MetadataSchema } from '../schema/metadata.schema';
 import { validateMetadata } from '../_utils/validate.utils';
+import { makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk';
+import { CreateArc19 } from './types/create-asa.interface';
 
 export abstract class Arc19 {
   static async isValidArc(info: AssetInfo) {
@@ -70,5 +72,54 @@ export abstract class Arc19 {
     } catch (error) {
       throw new Error(`Arc 19 ${Errors.arcBadConfigured} ` + error);
     }
+  }
+
+  static async create({
+    client,
+    decimals,
+    defaultFrozen,
+    from,
+    total,
+    metadataCID,
+    assetName,
+    clawback,
+    freeze,
+    manager,
+    note,
+    rekeyTo,
+    template,
+    unitName,
+  }: CreateArc19) {
+    const encodedAddress = fromCIDToAddress(metadataCID);
+    if (
+      !(await this.isValidArc({
+        index: 1,
+        params: {
+          creator: from,
+          decimals,
+          total,
+          reserve: encodedAddress,
+          url: template,
+        },
+      }))
+    ) {
+      throw new Error('Invalid params for ARC19');
+    }
+    return makeAssetCreateTxnWithSuggestedParamsFromObject({
+      decimals,
+      defaultFrozen,
+      from,
+      suggestedParams: await client.getTransactionParams().do(),
+      total,
+      assetURL: template,
+      assetName,
+      clawback,
+      freeze,
+      manager,
+      note,
+      rekeyTo,
+      reserve: encodedAddress,
+      unitName,
+    });
   }
 }
