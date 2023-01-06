@@ -8,7 +8,7 @@ import { AssetInfo } from '../types/asset-info.interface';
 import { ArcMetadata } from '../types/json.scheme';
 import { createASADigitalMediaListHandler } from '../_utils/arc-metadata.utils';
 import { buildFetchUrlFromUrl } from '../_utils/fetch-path.utils';
-import { checkIfValidIpfsMetadataTemplate } from '../_utils/ipfs.utils';
+import { isDecentralizedURI } from '../_utils/ipfs.utils';
 import { isJson } from '../_utils/json';
 import { validateMetadata } from '../_utils/validate.utils';
 import { CreateArc3 } from './types/create-asa.interface';
@@ -66,7 +66,7 @@ export abstract class Arc3 {
   }
 
   static async create({
-    client,
+    suggestedParams,
     defaultFrozen,
     metadataURI,
     metadataHash,
@@ -82,10 +82,10 @@ export abstract class Arc3 {
     rekeyTo,
     note,
   }: CreateArc3) {
-    if (!checkIfValidIpfsMetadataTemplate(metadataURI) && !metadataHash) {
+    if (!isDecentralizedURI(metadataURI) && !metadataHash) {
       throw new Error('Integrity of metadata is required if decentralized service its not used.');
     }
-    if (!this.isValidArc(metadataURI, assetName)) {
+    if (!(await this.isValidArc(metadataURI, assetName))) {
       throw new Error(`Invalid configuration. Please check the following items:
       - Metadata URI is valid (follows this structure -> ipfs://<CID>)
       - Metadata follows ARC3 schema
@@ -96,7 +96,7 @@ export abstract class Arc3 {
       total,
       from,
       defaultFrozen,
-      suggestedParams: await client.getTransactionParams().do(),
+      suggestedParams,
       assetMetadataHash: metadataHash,
       assetURL: metadataURI,
       assetName,

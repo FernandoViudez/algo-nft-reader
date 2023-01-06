@@ -1,15 +1,15 @@
-import { Algodv2 } from 'algosdk';
+import { SuggestedParams } from 'algosdk';
 import { Arc69Metadata } from './json.scheme';
 
 export interface CreateArc69 {
+  suggestedParams: SuggestedParams;
   decimals: number;
   defaultFrozen: boolean;
   digitalMediaURI: string;
   metadata: Arc69Metadata;
   from: string;
-  client: Algodv2;
   total: number;
-  digitalMediaHash: string;
+  digitalMediaHash?: string | Uint8Array;
   assetName?: string;
   clawback?: string;
   freeze?: string;

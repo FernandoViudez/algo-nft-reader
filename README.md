@@ -76,6 +76,7 @@ const nftReader = new NFTReader(indexerClient);
 
 ### TODO:
 
+- tests for integrity
 - getStandard() should return an array of arcs
 - extra-metadata support
 - localization metadata field integrity check

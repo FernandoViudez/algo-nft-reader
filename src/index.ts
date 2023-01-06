@@ -1,4 +1,7 @@
 import { Indexer } from 'algosdk';
+import { CreateArc19 } from './arc19/types/create-asa.interface';
+import { CreateArc3 } from './arc3/types/create-asa.interface';
+import { CreateArc69 } from './arc69/types/create-asa.interface';
 import { Arc69Metadata } from './arc69/types/json.scheme';
 import { Asset } from './asset';
 import { constants } from './constants';
@@ -27,7 +30,9 @@ export class NFTReader {
 
   private async initializeAsset(asaId: number): Promise<Asset> {
     const asset = new Asset(asaId, this.indexerClient);
-    await asset.resolveAsset();
+    if (asaId != 0) {
+      await asset.resolveAsset();
+    }
     return asset;
   }
 
@@ -55,6 +60,19 @@ export class NFTReader {
     const asset = await this.initializeAsset(asaId);
     return await asset.validateMetadataIntegrity();
   }
+
+  async createAsset(asaCreateParams: CreateArc3 | CreateArc19 | CreateArc69) {
+    const asset = await this.initializeAsset(0);
+    return await asset.create(asaCreateParams);
+  }
 }
 
-export { ArcMetadata, Arc69Metadata, fromCIDToAddress, getCIDFromAddress };
+export {
+  ArcMetadata,
+  Arc69Metadata,
+  fromCIDToAddress,
+  getCIDFromAddress,
+  CreateArc19,
+  CreateArc3,
+  CreateArc69,
+};

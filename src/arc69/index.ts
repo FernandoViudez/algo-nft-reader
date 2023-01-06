@@ -4,7 +4,7 @@ import { Errors } from '../enum/errors.enum';
 import { ASADigitalMedia } from '../types/asa-digital-media.interface';
 import { AssetInfo } from '../types/asset-info.interface';
 import { createASADigitalMediaListHandler } from '../_utils/arc-metadata.utils';
-import { checkIfValidIpfsMetadataTemplate } from '../_utils/ipfs.utils';
+import { isDecentralizedURI } from '../_utils/ipfs.utils';
 import { validateMetadata } from '../_utils/validate.utils';
 import { MetadataSchema } from './schema/metadata.schema';
 import { CreateArc69 } from './types/create-asa.interface';
@@ -68,7 +68,7 @@ export abstract class Arc69 {
     decimals,
     defaultFrozen,
     from,
-    client,
+    suggestedParams,
     total,
     digitalMediaHash,
     assetName,
@@ -84,14 +84,14 @@ export abstract class Arc69 {
     if (!(await this.isValidMetadata(metadata))) {
       throw new Error('Invalid metadata for ARC69');
     }
-    if (!checkIfValidIpfsMetadataTemplate(digitalMediaURI) && !digitalMediaHash) {
+    if (!isDecentralizedURI(digitalMediaURI) && !digitalMediaHash) {
       throw new Error('Integrity of metadata is required if decentralized service its not used.');
     }
     return makeAssetCreateTxnWithSuggestedParamsFromObject({
       decimals,
       defaultFrozen,
       from,
-      suggestedParams: await client.getTransactionParams().do(),
+      suggestedParams,
       total,
       assetMetadataHash: digitalMediaHash,
       assetName,

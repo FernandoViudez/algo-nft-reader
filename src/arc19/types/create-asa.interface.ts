@@ -1,7 +1,7 @@
-import { Algodv2 } from 'algosdk';
+import { Algodv2, SuggestedParams } from 'algosdk';
 
 export interface CreateArc19 {
-  client: Algodv2;
+  suggestedParams: SuggestedParams;
   metadataCID: string;
   template: string;
   decimals: number;

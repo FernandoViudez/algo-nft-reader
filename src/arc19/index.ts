@@ -75,7 +75,7 @@ export abstract class Arc19 {
   }
 
   static async create({
-    client,
+    suggestedParams,
     decimals,
     defaultFrozen,
     from,
@@ -109,7 +109,7 @@ export abstract class Arc19 {
       decimals,
       defaultFrozen,
       from,
-      suggestedParams: await client.getTransactionParams().do(),
+      suggestedParams,
       total,
       assetURL: template,
       assetName,

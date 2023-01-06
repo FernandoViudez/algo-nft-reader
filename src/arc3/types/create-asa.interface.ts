@@ -1,13 +1,13 @@
-import { Algodv2 } from 'algosdk';
+import { Algodv2, SuggestedParams } from 'algosdk';
 
 export interface CreateArc3 {
-  client: Algodv2;
+  suggestedParams: SuggestedParams;
   defaultFrozen: boolean;
   from: string;
   decimals: number;
   total: number;
   metadataURI: string;
-  metadataHash?: string;
+  metadataHash?: string | Uint8Array;
   assetName?: string;
   clawback?: string;
   freeze?: string;

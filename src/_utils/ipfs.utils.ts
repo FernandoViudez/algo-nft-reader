@@ -1,5 +1,4 @@
 import { decodeAddress, encodeAddress } from 'algosdk';
-import { isCID } from 'cids';
 import { CID } from 'multiformats/cid';
 import { encode, decode } from 'multihashes';
 import { NFTReader } from '..';
@@ -27,9 +26,9 @@ export function checkIpfsGatewayPath(ipfsGateway: string) {
  * Should follow this structure: "ipfs://<CID>"
  * @param ipfsTemplate
  */
-export function checkIfValidIpfsMetadataTemplate(ipfsTemplate: string) {
+export function isDecentralizedURI(ipfsTemplate: string) {
   try {
-    if (!ipfsTemplate.startsWith('ipfs://') || !isCID(ipfsTemplate.split('://')[1])) {
+    if (!ipfsTemplate.startsWith('ipfs://')) {
       return false;
     }
     return true;
