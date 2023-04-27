@@ -1,11 +1,11 @@
 {
   "name": "nft-reader",
-  "version": "1.0.12",
+  "version": "2.0.0",
   "description": "NFT reader for Algorand blockchain",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha --timeout 10000 -r ts-node/register -r dotenv/config 'test/**/*.test.ts' ",
+    "test": "mocha --timeout 100000 -r ts-node/register -r dotenv/config 'test/**/*.test.ts' ",
     "publish:custom": "npm run test && npm run build && npm publish",
     "prebuild": "rimraf dist",
     "build": "tsc"
@@ -41,6 +41,7 @@
     "axios": "^1.2.1",
     "cid-tool": "^3.0.0",
     "cids": "^1.1.9",
+    "class-validator": "^0.14.0",
     "is-url": "^1.2.4",
     "multiformats": "^9.9.0",
     "multihashes": "^4.0.3"

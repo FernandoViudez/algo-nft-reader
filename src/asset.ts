@@ -1,7 +1,10 @@
 import { Indexer } from 'algosdk';
 import { Arc19 } from './arc19';
+import { CreateArc19 } from './arc19/types/create-asa.interface';
 import { Arc3 } from './arc3';
+import { CreateArc3 } from './arc3/types/create-asa.interface';
 import { Arc69 } from './arc69';
+import { CreateArc69 } from './arc69/types/create-asa.interface';
 import { Arc69Metadata } from './arc69/types/json.scheme';
 import { ArcEnum } from './enum/arc.enum';
 import { Errors } from './enum/errors.enum';
@@ -49,12 +52,12 @@ export class Asset {
   }
 
   private async setStandard() {
-    if (Arc19.checkIfValidArc(this.info.params.url)) {
+    if (await Arc19.isValidArc(this.info)) {
       this.arc = ArcEnum.arc19;
-    } else if (await Arc69.checkIfValidArc(this.info, this.indexerService)) {
-      this.arc = ArcEnum.arc69;
-    } else if (await Arc3.checkIfValidArc(this.info)) {
+    } else if (await Arc3.isValidArc(this.info.params.url, this.info.params.name)) {
       this.arc = ArcEnum.arc3;
+    } else if (await Arc69.isValidArc(this.info, this.indexerService)) {
+      this.arc = ArcEnum.arc69;
     } else {
       this.arc = ArcEnum.custom;
     }
@@ -98,6 +101,18 @@ export class Asset {
           },
         ];
       }
+    }
+  }
+
+  async create(asaCreateParams: CreateArc3 | CreateArc19 | CreateArc69) {
+    if ('metadataURI' in asaCreateParams) {
+      return await Arc3.create(asaCreateParams);
+    } else if ('metadataCID' in asaCreateParams) {
+      return await Arc19.create(asaCreateParams);
+    } else if ('digitalMediaURI' in asaCreateParams) {
+      return await Arc69.create(asaCreateParams);
+    } else {
+      throw new Error('Cant create custom arc from here');
     }
   }
 

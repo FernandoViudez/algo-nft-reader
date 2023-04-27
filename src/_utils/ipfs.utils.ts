@@ -23,6 +23,21 @@ export function checkIpfsGatewayPath(ipfsGateway: string) {
 }
 
 /**
+ * Should follow this structure: "ipfs://<CID>"
+ * @param ipfsTemplate
+ */
+export function isDecentralizedURI(ipfsTemplate: string) {
+  try {
+    if (!ipfsTemplate.startsWith('ipfs://')) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
  * Receives assetUrl which should be the following: ipfs://<ipfs-cid>
  * @param assetUrl
  * @returns
